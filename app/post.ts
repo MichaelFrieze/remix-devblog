@@ -20,6 +20,17 @@ function isValidPostAttributes(
   return attributes?.title;
 }
 
+export async function getPost(slug: string) {
+  let filepath = path.join(postsPath, slug + '.md');
+  let file = await fs.readFile(filepath);
+  let { attributes } = parseFrontMatter(file.toString());
+  invariant(
+    isValidPostAttributes(attributes),
+    `Post ${filepath} is missing attributes`
+  );
+  return { slug, title: attributes.title };
+}
+
 export async function getPosts() {
   let dir = await fs.readdir(postsPath);
   return Promise.all(
