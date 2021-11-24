@@ -1,4 +1,4 @@
-import { Form, redirect } from 'remix';
+import { useActionData, Form, redirect } from 'remix';
 import type { ActionFunction } from 'remix';
 import { createPost } from '~/post';
 import invariant from 'tiny-invariant';
@@ -25,20 +25,25 @@ export let action: ActionFunction = async ({ request }) => {
 };
 
 export default function NewPost() {
+  let errors = useActionData();
+
   return (
     <Form method="post">
       <p>
         <label>
-          Post Title: <input type="text" name="title" />
+          Post Title: {errors?.title && <em>Title is required</em>}
+          <input type="text" name="title" />
         </label>
       </p>
       <p>
         <label>
-          Post Slug: <input type="text" name="slug" />
+          Post Slug: {errors?.slug && <em>Slug is required</em>}
+          <input type="text" name="slug" />
         </label>
       </p>
       <p>
-        <label htmlFor="markdown">Markdown</label>
+        <label htmlFor="markdown">Markdown:</label>{' '}
+        {errors?.markdown && <em>Markdown is required</em>}
         <br />
         <textarea rows={20} name="markdown" />
       </p>
