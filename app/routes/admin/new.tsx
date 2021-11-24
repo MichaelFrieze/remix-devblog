@@ -11,14 +11,14 @@ export let action: ActionFunction = async ({ request }) => {
   let markdown = formData.get('markdown');
 
   let errors = {};
-  if (!title) errors.title = true;
-  if (!slug) errors.slug = true;
-  if (!markdown) errors.markdown = true;
 
   if (Object.keys(errors).length) {
     return errors;
   }
 
+  invariant(typeof title === 'string');
+  invariant(typeof slug === 'string');
+  invariant(typeof markdown === 'string');
   await createPost({ title, slug, markdown });
 
   return redirect('/admin');
