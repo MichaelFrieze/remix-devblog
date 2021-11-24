@@ -1,6 +1,7 @@
 import { Form, redirect } from 'remix';
 import type { ActionFunction } from 'remix';
 import { createPost } from '~/post';
+import invariant from 'tiny-invariant';
 
 export let action: ActionFunction = async ({ request }) => {
   let formData = await request.formData();
@@ -8,6 +9,15 @@ export let action: ActionFunction = async ({ request }) => {
   let title = formData.get('title');
   let slug = formData.get('slug');
   let markdown = formData.get('markdown');
+
+  let errors = {};
+  if (!title) errors.title = true;
+  if (!slug) errors.slug = true;
+  if (!markdown) errors.markdown = true;
+
+  if (Object.keys(errors).length) {
+    return errors;
+  }
 
   await createPost({ title, slug, markdown });
 
